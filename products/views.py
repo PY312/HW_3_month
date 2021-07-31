@@ -3,6 +3,8 @@ from .models import Product, Category
 from products.forms import ProductForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from products.forms import RegisterForm
+from .forms import LoginForm
 
 # Create your views here.
 def main_page_view(request):
@@ -67,3 +69,19 @@ def login(request):
 
     }
     return render(request, 'login.html', context=data)
+
+def register(request):
+    if request.method == 'POST':
+        form =RegisterForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/login/')
+        else:
+            data = {
+                'form':form,
+            }
+            return render(request, 'register.html', context=data)
+    data = {
+        'form': RegisterForm()
+    }
+    return render(request, 'register.html', context=data)
