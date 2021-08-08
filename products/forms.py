@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from products.models import Product
+from products.models import ConfeirmCode
+
+import datetime
+import secrets
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -82,10 +86,30 @@ class RegisterForm(forms.Form):
             is_active=True
         )
         user.save()
+
+        code = secrets.token_urlsafe(6)
+        ConfeirmCode.objects.create(code=code,
+                                    user=user,
+                                    valid_until=datetime.datetime.now() + datetime.timedelta(minutes=20))
         send_mail(
-            message='Test django message',
-            subject='Registration test',
+            message=f"http://127.0.0.1:8000/activate/{code}/",
+            subject="Activation code",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[self.cleaned_data['username']],
+            recipient_list=[self.cleaned_data["username"]]
         )
         return user
+
+
+
+class CheckForm(forms.Form):
+
+    username=forms.CharField(max_length=100,min_length=3,widget=forms.TextInput(
+        attrs={
+            "class":"form-control"
+        }
+    ))
+    password=forms.CharField(max_length=100,min_length=3,widget=forms.PasswordInput(
+        attrs={
+            "class":"form-control"
+        }
+    ))

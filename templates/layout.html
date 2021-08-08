@@ -24,7 +24,6 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/add_product/">Добавление товаров</a>
-        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Category
@@ -48,7 +47,16 @@
             </li>
 
         {% endif %}
+        </li>
+             {% if not user.is_authenticated %}
+              <li class="nav-item">
+                    <a class="nav-link " href="/register/">Регистрация</a>
+                     {% endif %}
+                </li>
       </ul>
+        <li class="nav-item">
+                    <a class="nav-link " href="/javascript/">ПОИСК ТОВАРА</a>
+        </li>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -62,5 +70,6 @@
 {% endblock %}
 
 </body>
-
+<script src="{% static "js/search.js" %}"></script>
+</html>
 </html>
